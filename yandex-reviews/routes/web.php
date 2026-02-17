@@ -1,27 +1,30 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth; 
 use Inertia\Inertia;
 
+// Корень сайта
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    if (Auth::check()) {
+        return redirect()->route('settings.edit');
+    }
+    return redirect()->route('login');
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
 require __DIR__.'/auth.php';
+
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    
+    
+    Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+
+    
+    Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
+    Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    
+});

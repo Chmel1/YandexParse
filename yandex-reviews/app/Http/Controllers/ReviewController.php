@@ -5,20 +5,25 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Review;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Inertia\Inertia;
 
 class ReviewController extends Controller
 {
     //Список отзывов
-    public function index(){
-        return Review::orderBy('published_at','desc')->paginate(10);
-    }
+    public function index()
+{
+    $reviews = auth()->user()->reviews()
+        ->orderBy('published_at', 'desc')
+        ->paginate(10);
 
-    public function storeSettings(Request $request){
-        $request->validate([
-            'url'=>'required|url|contains:yandex.ru'
-        ]);
+    return Inertia::render('Reviews', [
+        'reviews' => $reviews,
+        'averageRating' => Cache::get('yandex_average_rating_' . auth()->id(), 0),
+        'totalYandexReviews' => (int) Cache::get('yandex_total_count_' . auth()->id(), 0),
+    ]);
+}
 
-        cache(['yandex_map_url' =>$request->url], now()->addYears(1));
-        return response()->json(['message'=>'Ссылка сохранена']);
-    }
+    
 }
