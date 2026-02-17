@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('branch_name')->nullable();
             $table->string('author_phone')->nullable();
             $table->timestamp('published_at');
-            $table->string('extrenal_id');
+            $table->string('external_id');
             $table->timestamps();
         });
     }
