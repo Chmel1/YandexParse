@@ -24,7 +24,7 @@
 
 ### 1. Клонирование и зависимости
 ```bash
-git clone [https://github.com/your-username/yandex-reviews-manager.git](https://github.com/your-username/yandex-reviews-manager.git)
+git clone [https://github.com/Chmel1/yandex-reviews-manager.git](https://github.com/Chmel1/yandex-reviews-manager.git)
 cd yandex-reviews-manager
 composer install
 npm install
